@@ -36,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
@@ -43,7 +44,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.githubsearch.domain.entity.UserEntity
+import com.example.githubsearch.data.serializable.User
 import com.example.githubsearch.presentation.navigation.AppDestinations
 import com.example.githubsearch.presentation.theme.darkColors
 import com.example.githubsearch.presentation.viewmodel.GitHubUserViewModel
@@ -127,8 +128,8 @@ fun AppView(
 @Composable
 fun HomeScreen(
     viewModel: GitHubUserViewModel,
-    users: List<UserEntity>,
-    favoriteUsers: List<UserEntity>
+    users: List<User>,
+    favoriteUsers: List<User>
 ) {
     var textSearch by remember { mutableStateOf("") }
 
@@ -146,8 +147,15 @@ fun HomeScreen(
                 value = textSearch,
                 onValueChange = { textSearch = it },
                 label = { Text("ユーザー名",) },
-                placeholder = { Text("ユーザー名を入力してください。") },
+                placeholder = {
+                    Text(
+                        text = "ユーザー名を入力してください。",
+                        maxLines = 1,
+                        softWrap = false,
+                        overflow = TextOverflow.Ellipsis
+                    ) },
                 maxLines = 1,
+                singleLine = true,
                 modifier = Modifier.weight(1f)
             )
 
@@ -235,11 +243,11 @@ fun HomeScreen(
 
 @Composable
 fun FavoritesScreen(
-    favoriteUsers: List<UserEntity>
+    favoriteUsers: List<User>
 ) {
     LazyColumn(
         modifier = Modifier
-            .padding(start = 0.dp, top = 16.dp, bottom = 16.dp, end = 0.dp)
+            .padding(16.dp)
     ) {
         items(
             favoriteUsers.size

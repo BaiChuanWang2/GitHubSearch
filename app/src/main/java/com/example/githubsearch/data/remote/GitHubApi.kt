@@ -9,5 +9,4 @@ interface GitHubApi {
     suspend fun searchUsers(
         @Query("q") query: String
     ): SearchUsersResponse
-
 }
