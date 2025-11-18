@@ -1,9 +1,9 @@
 package com.example.githubsearch.data.repository
 
 import androidx.datastore.core.DataStore
+import com.example.githubsearch.data.api.GitHubApi
 import com.example.githubsearch.data.serializable.Favorites
 import com.example.githubsearch.data.serializable.User
-import com.example.githubsearch.di.GitHubApi
 import jakarta.inject.Inject
 
 class GitHubUserRepository @Inject constructor(

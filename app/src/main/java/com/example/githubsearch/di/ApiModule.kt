@@ -1,5 +1,6 @@
 package com.example.githubsearch.di
 
+import com.example.githubsearch.data.api.GitHubApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,8 +15,8 @@ import java.util.concurrent.TimeUnit
 @Module
 @InstallIn(SingletonComponent::class)
 object ApiModule {
-    private const val baseUrl = "https://api.github.com/"
-    private const val timeout: Long = 10
+    private const val BASE_URL = "https://api.github.com/"
+    private const val TIMEOUT: Long = 10
 
     @Provides
     @Singleton
@@ -28,9 +29,9 @@ object ApiModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(logging: HttpLoggingInterceptor) = OkHttpClient.Builder()
-        .connectTimeout(timeout, TimeUnit.SECONDS)
-        .readTimeout(timeout, TimeUnit.SECONDS)
-        .writeTimeout(timeout, TimeUnit.SECONDS)
+        .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
+        .readTimeout(TIMEOUT, TimeUnit.SECONDS)
+        .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
         .addInterceptor(logging)
         .build()
 
@@ -38,7 +39,7 @@ object ApiModule {
     @Singleton
     fun provideRetrofit(client: OkHttpClient): Retrofit =
         Retrofit.Builder()
-            .baseUrl(baseUrl)
+            .baseUrl(BASE_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

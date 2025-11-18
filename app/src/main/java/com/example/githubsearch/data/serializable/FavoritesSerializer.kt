@@ -5,7 +5,7 @@ import kotlinx.serialization.json.Json
 import java.io.InputStream
 import java.io.OutputStream
 
-object FavoritesSerializer : Serializer<Favorites> {
+object FavoritesSerializer: Serializer<Favorites> {
     override val defaultValue: Favorites
         get() = Favorites()
 

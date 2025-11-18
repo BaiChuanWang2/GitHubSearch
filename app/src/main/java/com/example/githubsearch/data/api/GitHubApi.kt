@@ -1,6 +1,6 @@
-package com.example.githubsearch.di
+package com.example.githubsearch.data.api
 
-import com.example.githubsearch.domain.model.SearchUsersResponse
+import com.example.githubsearch.data.api.response.SearchUsersResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
