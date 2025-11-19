@@ -21,10 +21,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -46,7 +49,6 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.githubsearch.data.serializable.User
 import com.example.githubsearch.presentation.navigation.AppDestinations
-import com.example.githubsearch.presentation.theme.darkColors
 import com.example.githubsearch.presentation.viewmodel.GitHubUserViewModel
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
@@ -56,12 +58,13 @@ fun AppView(
 ) {
     val users by viewModel.users.collectAsState()
     val favoriteUsers by viewModel.favoriteUsers.collectAsState()
+    val isDarkTheme by viewModel.isDarkTheme.collectAsState()
 
     var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.HOME) }
     val navController = rememberNavController()
 
     MaterialTheme(
-        colorScheme = darkColors
+        colorScheme = if (isDarkTheme) darkColorScheme() else lightColorScheme()
     ) {
         NavigationSuiteScaffold(
             navigationSuiteItems = {
@@ -75,7 +78,7 @@ fun AppView(
                         label = {
                             Text(
                                 text = it.label,
-                                color = Color.White
+                                color = MaterialTheme.colorScheme.onBackground
                             ) },
                         selected = it == currentDestination,
                         onClick = {
@@ -117,7 +120,10 @@ fun AppView(
                     composable(
                         AppDestinations.Setting.label
                     ) {
-                        SettingScreen()
+                        SettingScreen(
+                            viewModel = viewModel,
+                            isDarkTheme = isDarkTheme
+                        )
                     }
                 }
             }
@@ -190,7 +196,7 @@ fun HomeScreen(
                         .fillMaxWidth()
                         .height(80.dp)
                         .background(
-                            color = Color(0xFF1E1E1E),
+                            color = MaterialTheme.colorScheme.surfaceContainerLow,
                             shape = RoundedCornerShape(4.dp))
                         .padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -220,7 +226,7 @@ fun HomeScreen(
                         Icon(
                             imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                             contentDescription = null,
-                            tint = if (isFavorite) Color.Red else Color.Gray
+                            tint = if (isFavorite) Color(0xFFFF4081) else Color(0xFF2C2C2C)
                         )
                     }
 
@@ -234,7 +240,7 @@ fun HomeScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(2.dp)
-                        .background(Color.Black)
+                        .background(MaterialTheme.colorScheme.background)
                 )
             }
         }
@@ -260,7 +266,7 @@ fun FavoritesScreen(
                     .fillMaxWidth()
                     .height(80.dp)
                     .background(
-                        color = Color(0xFF1E1E1E),
+                        color = MaterialTheme.colorScheme.surfaceContainerLow,
                         shape = RoundedCornerShape(4.dp))
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -287,13 +293,44 @@ fun FavoritesScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(2.dp)
-                    .background(Color.Black)
+                    .background(MaterialTheme.colorScheme.background)
             )
         }
     }
 }
 
 @Composable
-fun SettingScreen() {
+fun SettingScreen(
+    viewModel: GitHubUserViewModel,
+    isDarkTheme: Boolean
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxHeight()
+            .padding(16.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(80.dp)
+                .background(
+                    color = MaterialTheme.colorScheme.surfaceContainerLow,
+                    shape = RoundedCornerShape(4.dp))
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                modifier = Modifier
+                    .weight(1f),
+                text = "ダークモード"
+            )
 
+            Switch(
+                checked = isDarkTheme,
+                onCheckedChange = { isChecked ->
+                    viewModel.saveTheme(isChecked)
+                }
+            )
+        }
+    }
 }

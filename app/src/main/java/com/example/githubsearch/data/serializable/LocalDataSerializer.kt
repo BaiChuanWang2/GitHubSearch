@@ -5,11 +5,11 @@ import kotlinx.serialization.json.Json
 import java.io.InputStream
 import java.io.OutputStream
 
-object FavoritesSerializer: Serializer<Favorites> {
-    override val defaultValue: Favorites
-        get() = Favorites()
+object LocalDataSerializer: Serializer<LocalData> {
+    override val defaultValue: LocalData
+        get() = LocalData()
 
-    override suspend fun readFrom(input: InputStream): Favorites {
+    override suspend fun readFrom(input: InputStream): LocalData {
         return try {
             val text = input.bufferedReader().use { it.readText() }
             if (text.isBlank()) {
@@ -23,7 +23,7 @@ object FavoritesSerializer: Serializer<Favorites> {
         }
     }
 
-    override suspend fun writeTo(t: Favorites, output: OutputStream) {
+    override suspend fun writeTo(t: LocalData, output: OutputStream) {
         output.bufferedWriter().use { it.write(Json.encodeToString(t)) }
     }
 }

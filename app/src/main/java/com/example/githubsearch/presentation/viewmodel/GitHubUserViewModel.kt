@@ -21,11 +21,19 @@ class GitHubUserViewModel @Inject constructor(
     val users: StateFlow<List<User>> = _users
 
     val favoriteUsers: StateFlow<List<User>> = repository.dataFlow
-        .map { it.users }
+        .map { it.favoriteUsers }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
             emptyList()
+        )
+
+    val isDarkTheme: StateFlow<Boolean> = repository.dataFlow
+        .map { it.isDarkTheme }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            true
         )
 
     fun searchUsers(query: String) {
@@ -41,6 +49,12 @@ class GitHubUserViewModel @Inject constructor(
     fun toggleFavorite(user: User) {
         viewModelScope.launch {
             repository.toggleFavorite(user)
+        }
+    }
+
+    fun saveTheme(isDarkTheme: Boolean) {
+        viewModelScope.launch {
+            repository.saveTheme(isDarkTheme)
         }
     }
 }

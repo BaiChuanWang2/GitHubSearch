@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
-import com.example.githubsearch.data.serializable.Favorites
-import com.example.githubsearch.data.serializable.FavoritesSerializer
+import com.example.githubsearch.data.serializable.LocalDataSerializer
+import com.example.githubsearch.data.serializable.LocalData
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,12 +18,12 @@ import jakarta.inject.Singleton
 object DataStoreModule {
     @Provides
     @Singleton
-    fun provideFavoriteUsersDataStore(
+    fun provideLocalDataDataStore(
         @ApplicationContext context: Context
-    ): DataStore<Favorites> {
+    ): DataStore<LocalData> {
         return DataStoreFactory.create(
-            serializer = FavoritesSerializer,
-            produceFile = { context.dataStoreFile("favorites.json") }
+            serializer = LocalDataSerializer,
+            produceFile = { context.dataStoreFile("local_data.json") }
         )
     }
 }
