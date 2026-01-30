@@ -1,5 +1,7 @@
 package com.example.githubsearch.presentation.ui
 
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -63,6 +65,11 @@ fun AppView(
     var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.HOME) }
     val navController = rememberNavController()
 
+    val activity = LocalActivity.current
+    BackHandler {
+        activity?.finish()
+    }
+
     MaterialTheme(
         colorScheme = if (isDarkTheme) darkColorScheme() else lightColorScheme()
     ) {
@@ -83,7 +90,10 @@ fun AppView(
                         selected = it == currentDestination,
                         onClick = {
                             currentDestination = it
-                            navController.navigate(it.label)
+                            navController.navigate(it.label) {
+                                launchSingleTop = true
+                                popUpTo(0)
+                            }
                         })
                 }
             },
